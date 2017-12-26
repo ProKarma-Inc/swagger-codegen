@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<XMLThreatProtection name="tp_XMLThreatProtection.DoSAEvaluation">
+    <Source>request</Source>
+    <StructureLimits>
+        <NodeDepth>10</NodeDepth>
+        <AttributeCountPerElement>4</AttributeCountPerElement>
+        <NamespaceCountPerElement>3</NamespaceCountPerElement>
+        <ChildCount includeText="true"
+                    includeComment="true"
+                    includeProcessingInstruction="true"
+                    includeElement="true">10</ChildCount>
+    </StructureLimits>
+    <ValueLimits>
+         <Text>260</Text>
+         <Attribute>60</Attribute>
+         <NamespaceURI>80</NamespaceURI>
+         <Comment>300</Comment>
+         <ProcessingInstructionData>60</ProcessingInstructionData>
+    </ValueLimits>
+    <NameLimits>
+          <Element>50</Element>
+          <Attribute>40</Attribute>
+          <NamespacePrefix>30</NamespacePrefix>
+          <ProcessingInstructionTarget>30</ProcessingInstructionTarget>
+    </NameLimits>
+</XMLThreatProtection>

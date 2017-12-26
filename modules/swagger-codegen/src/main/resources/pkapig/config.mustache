@@ -1,0 +1,21 @@
+{
+	"configurations": [{
+		"name": "test",
+		"proxies": [{
+			"name": "petApi.xml",
+			"tokens": [{
+				"xpath": "/ProxyEndpoint/HTTPProxyConnection/BasePath",
+				"value": "/petStore"
+			}]
+		}],
+		"policies": [],
+		"targets": [{
+			"name": "default.xml",
+			"tokens": [{
+				"xpath": "/TargetEndpoint/HTTPTargetConnection/URL",
+				"value": "http://weather.yahooapis.com"
+			}]
+
+		}]
+	}]
+}

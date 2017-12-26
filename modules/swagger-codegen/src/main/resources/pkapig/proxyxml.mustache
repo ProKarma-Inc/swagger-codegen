@@ -1,0 +1,69 @@
+<ProxyEndpoint name="{{{baseName}}}proxy">
+<Description>APIProxyTemplate</Description>
+	<!-- Generic Fault Rules defined below. -->
+	<PreFlow name="PreFlow">
+  <Step><Name>tp_AssignMessage.InitializeConfigurations</Name></Step>
+  <Step><FaultRules /><Name>tp_SpikeArrest.TrafficSpikeProtection</Name></Step>
+  <!-- Security policies BEGINING -->
+			<Step>
+			<FaultRules />
+			<Name>tp_JSONThreatProtection.DoSAEvaluation</Name>
+			<Condition>(request.content.length > 0)</Condition>
+			</Step>
+			<Step>
+			<FaultRules />
+			<Name>tp_XMLThreatProtection.DoSAEvaluation</Name>
+			<Condition>(request.content.length > 0)</Condition>
+			</Step>
+			<Step>
+			<FaultRules />
+			<Name>tp_JS.SQLInjectionEvaluation</Name>
+			<Condition>(request.content.length > 0)</Condition>
+			</Step>
+			<Step>
+			<FaultRules />
+			<Name>tp_JS.ServerSideIncludeInjectionEvaluation</Name>
+			<Condition>(request.content.length > 0)</Condition>
+			</Step>
+			<Step>
+			<FaultRules />
+			<Name>tp_JS.JavaScriptInjectionEvaluation</Name>
+			<Condition>(request.content.length > 0)</Condition>
+			</Step>
+			<Step>
+			<FaultRules />
+			<Name>tp_JS.XPathSyntaxInjectionEvaluation</Name>
+			<Condition>(request.content.length > 0)</Condition>
+			</Step>
+			<Step>
+			<FaultRules />
+			<Condition>threatProtectionEvaluationStatus == "failed"</Condition>
+			<Name>tp_RaiseFault.RedirectToDefaultFaultHandling</Name>
+			</Step>
+	<!-- Security policies END -->
+  </PreFlow>
+  <Flows>
+  {{#operations}}
+  {{#operation}}
+  <Flow name="{{{operationId}}}">
+  <Description>{{{summary}}}</Description>
+    <Request>
+        <Step><Name>tp_JS.GetFlowName</Name></Step>
+    </Request>
+    <Response>
+    </Response>
+    <Condition>(proxy.pathsuffix MatchesPath &quot;{{{path}}}&quot;) and (request.verb = &quot;{{httpMethod}}&quot;)</Condition>
+  </Flow>
+  {{/operation}}
+  {{/operations}}
+</Flows>
+  <HTTPProxyConnection>
+    <!-- Define a URI to create the path to this proxy. -->	
+    <BasePath>{{{basePath}}}</BasePath>  
+    <!-- Listen on HTTP URL defined in the VirtualHost named 'default'. -->	
+    <VirtualHost>default</VirtualHost>
+  </HTTPProxyConnection>
+  <RouteRule name="Route">
+    <!-- No route. This API proxy is an echo service. -->
+  </RouteRule>
+</ProxyEndpoint>
