@@ -2,6 +2,7 @@
 <Description>APIProxyTemplate</Description>
 	<!-- Generic Fault Rules defined below. -->
 	<PreFlow name="PreFlow">
+	<Request>
   <Step><Name>tp_AssignMessage.InitializeConfigurations</Name></Step>
   <Step><FaultRules /><Name>tp_SpikeArrest.TrafficSpikeProtection</Name></Step>
   <!-- Security policies BEGINING -->
@@ -41,6 +42,8 @@
 			<Name>tp_RaiseFault.RedirectToDefaultFaultHandling</Name>
 			</Step>
 	<!-- Security policies END -->
+	</Request>
+	<Response/>
   </PreFlow>
   <Flows>
   {{#operations}}

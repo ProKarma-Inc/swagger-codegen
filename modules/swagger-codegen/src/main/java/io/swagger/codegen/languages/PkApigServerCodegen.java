@@ -403,6 +403,9 @@ protected String serviceName = "Pkapige";
        this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_XMLThreatProtection.DoSAEvaluation.mustache",this.policiesFolder,
                "tp_XMLThreatProtection.DoSAEvaluation" + ".xml"
            ));
+       this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_SpikeArrest.TrafficSpikeProtection.mustache",this.policiesFolder,
+               "tp_SpikeArrest.TrafficSpikeProtection" + ".xml"
+           ));
         //resources
        this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_getFlowName.mustache",this.jsResourcesFolder,
                "tp_getFlowName" + ".js"
