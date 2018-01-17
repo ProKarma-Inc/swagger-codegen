@@ -1,5 +1,16 @@
 <ProxyEndpoint name="{{{baseName}}}proxy">
 <Description>APIProxyTemplate</Description>
+    <FaultRules>
+     <FaultRule name="faultRules">
+           <Step>
+				<Name>tp_GenericFaultHandling</Name>
+			</Step>
+			<Step>
+				<Name>tp_SetJSONErrorMessage</Name>
+			</Step>
+     </FaultRule>
+    </FaultRules>
+
 	<!-- Generic Fault Rules defined below. -->
 	<PreFlow name="PreFlow">
 	<Request>
@@ -42,6 +53,43 @@
 			<Name>tp_RaiseFault.RedirectToDefaultFaultHandling</Name>
 			</Step>
 	<!-- Security policies END -->
+	<!-- AccessToken verification START -->
+	         <Step>
+				<FaultRules />
+				<Name>tp_Extract_AuthHeader</Name>
+			</Step>
+			<Step>
+				<FaultRules />
+				<Name>tp_JS_CheckATBearerCase</Name>
+			</Step>
+			<Step>
+				<FaultRules />
+				<Name>tp_OAuthV2.VerifyAccessToken</Name>
+			</Step>
+			<Step>
+				<FaultRules />
+				<Name>tp_VerifyAPIKey</Name>
+			</Step>
+	<!-- AccessToken verification END -->
+	<!-- Rate limit check START -->
+	<Step>
+				<Name>tp_JS.SetRateLimitingValues</Name>
+			</Step>
+			<Step>
+				<Name>tp_Quota.RateLimitingQuotaCount</Name>
+			</Step>
+			<Step>
+				<Name>tp_Quota.RateLimitingTransactionCount</Name>
+			</Step>
+	 <!-- Rate Limit Check END-->
+	<!-- Request  info Logging START-->
+			<Step>
+				<Name>tp_JS.ExtractHeadersFromRequest</Name>
+			</Step>
+			<Step>
+				<Name>tp_MessageLogging.Logger</Name>
+			</Step>
+	 <!-- Request  info Logging END-->
 	</Request>
 	<Response/>
   </PreFlow>

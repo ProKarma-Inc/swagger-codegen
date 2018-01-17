@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MessageLogging enabled="true" continueOnError="true" async="true" name="tp_MessageLogging.Logger">
+    <FaultRules/>
+    <Properties/>
+    <BufferMessage>true</BufferMessage>
+    <File async="true">
+        <FileName>File_Name.log</FileName>
+        <FileRotationOptions rotateFileOnStartup="false">
+            <MaxFileSizeInMB>50</MaxFileSizeInMB>
+            <MaxFilesToRetain>10</MaxFilesToRetain>
+            <RotationFrequency unit="day">1</RotationFrequency>
+            <FileRotationType>SIZE</FileRotationType>
+        </FileRotationOptions>
+        <FlushAfterEachWrite>true</FlushAfterEachWrite>
+        <Message> {system.time} | timestampinmillis = {system.timestamp} | {logging.loglevel} | envName = {environment.name} | service = {apiproxy.name} | APIKey = {client_id} | AppName = {developer.app.name} | {logging.message}
+</Message>
+    </File>
+    <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</MessageLogging>

@@ -60,7 +60,7 @@ public class PkApigServerCodegen extends DefaultCodegen implements CodegenConfig
   protected String projectFolder;
   
 
-protected String projectTestFolder;
+  protected String projectTestFolder;
   protected String sourceFolder;
   protected String policiesFolder;
   protected String targetFolder;
@@ -406,6 +406,39 @@ protected String serviceName = "Pkapige";
        this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_SpikeArrest.TrafficSpikeProtection.mustache",this.policiesFolder,
                "tp_SpikeArrest.TrafficSpikeProtection" + ".xml"
            ));
+       this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_Extract_AuthHeader.mustache",this.policiesFolder,
+               "tp_Extract_AuthHeader" + ".xml"
+           ));
+       this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_JS_CheckATBearerCase.mustache",this.policiesFolder,
+               "tp_JS_CheckATBearerCase" + ".xml"
+           ));
+       this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_OAuthV2.VerifyAccessToken.mustache",this.policiesFolder,
+               "tp_OAuthV2.VerifyAccessToken" + ".xml"
+           ));
+       this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_JS.ExtractHeadersFromRequest.mustache",this.policiesFolder,
+               "tp_JS.ExtractHeadersFromRequest" + ".xml"
+           ));
+       this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_MessageLogging.Logger.mustache",this.policiesFolder,
+               "tp_MessageLogging.Logger" + ".xml"
+           ));
+       this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_JS.SetRateLimitingValues.mustache",this.policiesFolder,
+               "tp_JS.SetRateLimitingValues" + ".xml"
+           ));
+       this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_Quota.RateLimitingQuotaCount.mustache",this.policiesFolder,
+               "tp_Quota.RateLimitingQuotaCount" + ".xml"
+           )); 
+       this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_Quota.RateLimitingTransactionCount.mustache",this.policiesFolder,
+               "tp_Quota.RateLimitingTransactionCount" + ".xml"
+           ));
+           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_VerifyAPIKey.mustache",this.policiesFolder,
+                   "tp_VerifyAPIKey" + ".xml"
+               ));
+           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_GenericFaultHandling.mustache",this.policiesFolder,
+                   "tp_GenericFaultHandling" + ".xml"
+               ));
+           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_SetJSONErrorMessage.mustache",this.policiesFolder,
+                   "tp_SetJSONErrorMessage" + ".xml"
+               ));
         //resources
        this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_getFlowName.mustache",this.jsResourcesFolder,
                "tp_getFlowName" + ".js"
@@ -421,6 +454,18 @@ protected String serviceName = "Pkapige";
            ));
        this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_xPathSyntaxInjectionEvaluation.mustache",this.jsResourcesFolder,
                "tp_xPathSyntaxInjectionEvaluation" + ".js"
+           ));
+       this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_CheckATBearerCase.mustache",this.jsResourcesFolder,
+               "tp_CheckATBearerCase" + ".js"
+           ));
+       this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_ExtractHeadersFromRequest.mustache",this.jsResourcesFolder,
+               "tp_ExtractHeadersFromRequest" + ".js"
+           ));
+       this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_setRateLimitingValues.mustache",this.jsResourcesFolder,
+               "tp_setRateLimitingValues" + ".js"
+           ));
+       this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_genericFaultHandling.mustache",this.jsResourcesFolder,
+               "tp_genericFaultHandling" + ".js"
            ));
        this.supportingFiles.add(new SupportingFile("api.mustache",this.sourceFolder,
                "api" + ".xml"
@@ -468,7 +513,6 @@ protected String serviceName = "Pkapige";
         }
       }
     }
-    System.out.println("&&&&&&&&&&Inside postProcessOperations function-return->"+objs.toString());
     return objs;
   }
 

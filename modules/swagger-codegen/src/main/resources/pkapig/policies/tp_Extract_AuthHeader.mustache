@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ExtractVariables enabled="true" continueOnError="true" async="false" name="tp_Extract_AuthHeader">
+	<Source>request</Source>
+	<DisplayName>tp_Extract_AuthHeader</DisplayName>
+	<FaultRules />
+	<Properties />
+	<IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+	<Header name="Authorization">
+		<Pattern ignoreCase="true">{bearerWithToken}</Pattern>
+	</Header>
+	<VariablePrefix>requestToken</VariablePrefix>
+</ExtractVariables>
+

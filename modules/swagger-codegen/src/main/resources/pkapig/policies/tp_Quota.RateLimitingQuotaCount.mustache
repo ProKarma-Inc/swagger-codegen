@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Quota name="tp_Quota.RateLimitingQuotaCount" enabled="true" continueOnError="false" async="true"> 
+ <Allow countRef="rateLimitQuotaCount"/>
+    <Interval>1</Interval>
+    <TimeUnit ref="rateLimitQuotaUnit" />
+    <Identifier ref="client_id"/>
+    <Distributed>true</Distributed>
+    <Synchronous>false</Synchronous>
+    <DisplayName>Rate Limiting Quota</DisplayName>
+</Quota>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage async="false" continueOnError="false" enabled="true" name="tp_SetJSONErrorMessage">
+        <FaultRules/>
+        <Properties/>
+		<Set>
+           	<Headers>
+				   <Header name="x-att-errorMessageId">{tp.fault.messageId}</Header>
+				   <Header name="x-att-errorText">{tp.fault.messageText}</Header>
+		 	</Headers>
+		   <Payload contentType="application/json" variablePrefix="%" variableSuffix="#">{
+			   "requestError": {
+					 "%tp.fault.exceptionType#":{
+					 	"messageId":"%tp.fault.messageId#",
+					 	"text":"%tp.fault.messageText#",
+					 	"variables":"%tp.fault.messageVariables#"
+					 }
+			   }
+			}</Payload>
+		   <StatusCode>{tp.fault.statusCode}</StatusCode>
+		   <ReasonPhrase>{tp.fault.reasonPhrase}</ReasonPhrase>
+		</Set>
+        <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+        <AssignTo createNew="false" transport="http" type="response"/>
+</AssignMessage>
