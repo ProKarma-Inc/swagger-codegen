@@ -14,43 +14,61 @@
 	<!-- Generic Fault Rules defined below. -->
 	<PreFlow name="PreFlow">
 	<Request>
-  <Step><Name>tp_AssignMessage.InitializeConfigurations</Name></Step>
-  <Step><FaultRules /><Name>tp_SpikeArrest.TrafficSpikeProtection</Name></Step>
+          <Step>
+              <Name>tp_AssignMessage.InitializeConfigurations</Name>
+          </Step>
+          <Step>
+               <FaultRules />
+               <Name>tp_SpikeArrest.TrafficSpikeProtection</Name>
+           </Step>
+  <!-- Validate Mandatory Header Elements : Begin (Common To All Flows) -->
+			<Step>
+				<FaultRules />
+				<Name>tp_SetMandatoryElementsHeader</Name>
+			</Step>
+			<Step>
+				<FaultRules />
+				<Name>tp_ValidateMandatoryElements</Name>
+			</Step>
+			<Step>
+                 <Condition>(ValidationError = "true")</Condition>
+                 <Name>tp_RaiseFault</Name>
+            </Step>
   <!-- Security policies BEGINING -->
 			<Step>
-			<FaultRules />
-			<Name>tp_JSONThreatProtection.DoSAEvaluation</Name>
-			<Condition>(request.content.length > 0)</Condition>
+			    <FaultRules />
+			    <Name>tp_JSONThreatProtection.DoSAEvaluation</Name>
+			     <Condition>(request.content.length > 0)</Condition>
 			</Step>
 			<Step>
-			<FaultRules />
-			<Name>tp_XMLThreatProtection.DoSAEvaluation</Name>
-			<Condition>(request.content.length > 0)</Condition>
+			    <FaultRules />
+			    <Name>tp_XMLThreatProtection.DoSAEvaluation</Name>
+			    <Condition>(request.content.length > 0)</Condition>
 			</Step>
 			<Step>
-			<FaultRules />
-			<Name>tp_JS.SQLInjectionEvaluation</Name>
-			<Condition>(request.content.length > 0)</Condition>
+			    <FaultRules />
+			    <Name>tp_JS.SQLInjectionEvaluation</Name>
+			    <Condition>(request.content.length > 0)</Condition>
 			</Step>
 			<Step>
-			<FaultRules />
-			<Name>tp_JS.ServerSideIncludeInjectionEvaluation</Name>
-			<Condition>(request.content.length > 0)</Condition>
+			    <FaultRules />
+			    <Name>tp_JS.ServerSideIncludeInjectionEvaluation</Name>
+			    <Condition>(request.content.length > 0)</Condition>
 			</Step>
 			<Step>
-			<FaultRules />
-			<Name>tp_JS.JavaScriptInjectionEvaluation</Name>
-			<Condition>(request.content.length > 0)</Condition>
+			    <FaultRules />
+			    <Name>tp_JS.JavaScriptInjectionEvaluation</Name>
+			    <Condition>(request.content.length > 0)</Condition>
 			</Step>
 			<Step>
-			<FaultRules />
-			<Name>tp_JS.XPathSyntaxInjectionEvaluation</Name>
-			<Condition>(request.content.length > 0)</Condition>
+			    <FaultRules />
+			    <Name>tp_JS.XPathSyntaxInjectionEvaluation</Name>
+			    <Condition>(request.content.length > 0)</Condition>
 			</Step>
 			<Step>
-			<FaultRules />
-			<Condition>threatProtectionEvaluationStatus == "failed"</Condition>
-			<Name>tp_RaiseFault.RedirectToDefaultFaultHandling</Name>
+			    <FaultRules />
+			    <Condition>threatProtectionEvaluationStatus == "failed"</Condition>
+			    <Name>tp_RaiseFault.RedirectToDefaultFaultHandling</Name>
 			</Step>
 	<!-- Security policies END -->
 	<!-- AccessToken verification START -->
@@ -71,6 +89,15 @@
 				<Name>tp_VerifyAPIKey</Name>
 			</Step>
 	<!-- AccessToken verification END -->
+	<!-- Scope Check START -->
+	        <Step>
+                <Name>ScopeVerification</Name>
+            </Step>	
+			<Step>
+				<Condition>isScopeError == true</Condition>
+				<Name>tp_RaiseFault</Name>
+			</Step>
+	<!-- Scope Check END -->
 	<!-- Rate limit check START -->
 	<Step>
 				<Name>tp_JS.SetRateLimitingValues</Name>

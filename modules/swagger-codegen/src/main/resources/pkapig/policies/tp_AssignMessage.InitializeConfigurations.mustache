@@ -11,7 +11,7 @@
 	</AssignVariable>
 	<AssignVariable>
 		<Name>apiScopes</Name>
-	<Value>{{#hasAuthMethods}}{{#authMethods}}{{#isOAuth}}{{#scopes}}"{{scope}}"{{#hasMore}},{{/hasMore}}{{/scopes}}{{/isOAuth}}{{#hasMore}}{{/hasMore}}{{/authMethods}}{{/hasAuthMethods}}</Value>
+	<Value>{{#hasAuthMethods}}{{#authMethods}}{{#isOAuth}}{{#scopes}}{{scope}}{{#hasMore}},{{/hasMore}}{{/scopes}}{{/isOAuth}}{{#hasMore}}{{/hasMore}}{{/authMethods}}{{/hasAuthMethods}}</Value>
     </AssignVariable>
     <AssignVariable>
 		<Name>spikeArrest.rate</Name>
@@ -35,4 +35,8 @@
 		<Value>[TO_BE_REPLACED]</Value>
 	</AssignVariable>
 	<!-- Rate Limit Configuration END-->
+	<AssignVariable>
+		<Name>headerElementsToValidate</Name>
+		<Value>[TO_BE_REPLACED]</Value>
+	</AssignVariable>
 </AssignMessage>

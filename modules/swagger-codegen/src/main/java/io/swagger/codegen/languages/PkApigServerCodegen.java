@@ -439,6 +439,18 @@ protected String serviceName = "Pkapige";
            this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_SetJSONErrorMessage.mustache",this.policiesFolder,
                    "tp_SetJSONErrorMessage" + ".xml"
                ));
+           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_SetMandatoryElementsHeader.mustache",this.policiesFolder,
+                   "tp_SetMandatoryElementsHeader" + ".xml"
+               ));
+           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_ValidateMandatoryElements.mustache",this.policiesFolder,
+                   "tp_ValidateMandatoryElements" + ".xml"
+               ));
+           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_RaiseFault.mustache",this.policiesFolder,
+                       "tp_RaiseFault" + ".xml"
+               ));
+           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"ScopeVerification.mustache",this.policiesFolder,
+                   "ScopeVerification" + ".xml"
+           ));
         //resources
        this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_getFlowName.mustache",this.jsResourcesFolder,
                "tp_getFlowName" + ".js"
@@ -466,6 +478,12 @@ protected String serviceName = "Pkapige";
            ));
        this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_genericFaultHandling.mustache",this.jsResourcesFolder,
                "tp_genericFaultHandling" + ".js"
+           ));
+       this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_ValidateMandatoryElements.mustache",this.jsResourcesFolder,
+               "tp_ValidateMandatoryElements" + ".js"
+           ));
+       this.supportingFiles.add(new SupportingFile("resources"+File.separator+"ValidateScope.mustache",this.jsResourcesFolder,
+               "ValidateScope" + ".js"
            ));
        this.supportingFiles.add(new SupportingFile("api.mustache",this.sourceFolder,
                "api" + ".xml"

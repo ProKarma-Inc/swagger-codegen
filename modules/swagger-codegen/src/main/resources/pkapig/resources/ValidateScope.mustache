@@ -1,0 +1,56 @@
+var acTokenScope = context.getVariable('scope');
+var apiScope = context.getVariable('apiScopes');
+var isScopeError = true; 
+var msgText = context.getVariable('insufficientScopeErrorText');
+
+var apiScopeArr = (apiScope == null)? null : apiScope.split(",");
+
+
+var i;
+
+if (apiScope == null){
+	isScopeError = true;
+}
+else if ( apiScopeArr[0] === 'NOTAPPLICABLE') {
+	isScopeError = false;
+} else {
+   
+	for (i=0; i < apiScopeArr.length; i++) 
+    {
+        var apiScopeWithOperation = apiScopeArr[i];
+      	var apiScopeArray = apiScopeWithOperation.split(":");
+      	var currentApiScope = apiScopeArray[1];
+     
+        var acTokenScopeArr = acTokenScope.split(' ');      
+        
+      	for(k=0; k<acTokenScopeArr.length;k++)
+        {
+          if (acTokenScopeArr[k] == currentApiScope)
+          {
+            	isScopeError = false;
+				break;
+          }
+        }
+      	if(isScopeError == false)
+      	{
+        	break;
+      	}
+              
+    }
+      
+}
+
+context.setVariable('isScopeError',isScopeError);
+
+if (isScopeError)
+{
+	context.setVariable("tp.fault.statusCode","403");
+	context.setVariable("tp.fault.reasonPhrase","Forbidden");
+	context.setVariable("tp.fault.exceptionType","policyException");
+	context.setVariable("tp.fault.messageId","POL0001");
+	context.setVariable("tp.fault.messageText", msgText);
+	context.setVariable("tp.fault.messageVariables","[ scope ]");
+}
+
+
+

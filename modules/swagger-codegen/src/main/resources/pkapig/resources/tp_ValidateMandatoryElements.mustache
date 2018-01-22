@@ -1,0 +1,58 @@
+var params = context.getVariable("MandatoryElementsToValidate");
+validateFlowSpecificParams(params); 
+  
+
+function validateFlowSpecificParams(params){
+  
+  if (params != null && (""+params).trim().length > 0){
+  
+	var paramsArray = params.split(",");
+    
+    if (paramsArray != null && paramsArray.length > 0){
+    
+        for (param in paramsArray){
+          
+            var paramName=paramsArray[param];
+            var paramValue = context.getVariable(paramName);
+            validateParam(paramName, paramValue);
+        }
+    }
+  }
+}
+function validateParam(paramName, paramValue) {
+  
+    if (paramValue == null) {
+		context.setVariable("ValidationError", "true");		
+	    context.setVariable("tp.fault.statusCode","400");
+		context.setVariable("tp.fault.reasonPhrase","Bad Request");
+		context.setVariable("tp.fault.exceptionType","serviceExceptiopn");
+		context.setVariable("tp.fault.messageId","SVC1002");
+		context.setVariable("tp.fault.messageText","Missing mandatory parameter %1");
+		context.setVariable("tp.fault.messageVariables",paramName);
+	}
+  	else if (!isValidInput(paramValue)){
+		context.setVariable("ValidationError", "true");		
+	    context.setVariable("tp.fault.statusCode","400");
+		context.setVariable("tp.fault.reasonPhrase","Bad Request");
+		context.setVariable("tp.fault.exceptionType","serviceExceptiopn");
+		context.setVariable("tp.fault.messageId","SVC0002");
+		context.setVariable("tp.fault.messageText","Invalid input value for message part %1");
+		context.setVariable("tp.fault.messageVariables",paramName);
+    }
+
+  
+}
+
+function isValidInput(parameter) {
+	
+	//CHECK FOR NULLS OR EMPTY STRING
+	try{
+		if((typeof parameter == "string") || (typeof parameter == "number") || (typeof parameter == "boolean")) {
+			return parameter != null && (parameter + "").trim() != "";
+		}
+	}catch(ex){
+		return false;
+	}
+	
+	return false;
+}
