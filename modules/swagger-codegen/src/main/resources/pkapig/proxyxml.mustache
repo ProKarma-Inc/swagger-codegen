@@ -126,7 +126,25 @@
   <Flow name="{{{operationId}}}">
   <Description>{{{summary}}}</Description>
     <Request>
-        <Step><Name>tp_JS.GetFlowName</Name></Step>
+        <Step>
+              <Name>tp_JS.GetFlowName</Name>
+        </Step>
+        <Step>
+              <Condition>(request.header.Content-Length > 0)</Condition>
+              <Name>tp_SetJsonSchemaRef</Name>
+        </Step>
+        <Step>
+              <Condition>(request.header.Content-Length > 0)</Condition>
+			  <Name>dataModel</Name>
+		</Step>
+        <Step>
+              <Condition>(request.header.Content-Length > 0)</Condition>
+              <Name>SchemaValidationJavaCallout</Name>
+        </Step>
+        <Step>
+	          <Condition>(request.header.Content-Length > 0) and (isObjectValid == false)</Condition>
+			  <Name>tp_RaiseFault</Name>
+		</Step>
     </Request>
     <Response>
     </Response>
@@ -141,7 +159,7 @@
     <!-- Listen on HTTP URL defined in the VirtualHost named 'default'. -->	
     <VirtualHost>default</VirtualHost>
   </HTTPProxyConnection>
-  <RouteRule name="Route">
-    <!-- No route. This API proxy is an echo service. -->
+  <RouteRule name="default">
+    <TargetEndpoint>default</TargetEndpoint>
   </RouteRule>
 </ProxyEndpoint>

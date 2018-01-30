@@ -1,0 +1,24 @@
+var modelObj="{{dataModel}}";
+var res1 = modelObj.replace(/&quot;/g,'"');
+var res = res1.replace(/_/g,'');
+var reqPayload = context.getVariable("request.content");
+var keyToExtract=context.getVariable("objectName");
+var json = JSON.parse(res);
+var reqArray =[];
+var finalObje={};
+var orderObj=json[keyToExtract].properties;
+for(var key in orderObj) {
+   if(orderObj[key].required){
+    delete orderObj[key].required;
+	reqArray.push(key);
+  }else if(!orderObj[key].required){
+  delete orderObj[key].required;
+  }
+}
+finalObje.properties=orderObj;
+if(reqArray.length > 0){
+finalObje.required=reqArray;
+}
+var strJson = JSON.stringify(finalObje, undefined, 2);				
+context.setVariable("jsonSchema",strJson);
+context.setVariable("requestPayload",reqPayload);

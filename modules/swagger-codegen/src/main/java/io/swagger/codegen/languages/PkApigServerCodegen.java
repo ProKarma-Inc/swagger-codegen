@@ -14,6 +14,8 @@ import java.util.Map;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.gson.Gson;
+
 import io.swagger.codegen.CliOption;
 import io.swagger.codegen.CodegenConfig;
 import io.swagger.codegen.CodegenConstants;
@@ -54,18 +56,19 @@ public class PkApigServerCodegen extends DefaultCodegen implements CodegenConfig
   public static final String TITLE = "title";
   public static final String WITH_XML = "withXml";
   public static final String TARGET_URI = "targetUri";
+  public static final String DATA_MODEL = "dataModel";
   protected String groupId = "com.prokarma";
   protected String artifactId = "pkmst-apigee";
   protected String artifactVersion = "1.0.0";
   protected String projectFolder;
-  
-
+ 
   protected String projectTestFolder;
   protected String sourceFolder;
   protected String policiesFolder;
   protected String targetFolder;
   protected String resourcesFolder;
   protected String jsResourcesFolder;
+  protected String javaResourcesFolder;
   protected String targetURI;
 
 protected String basePackage = "com.prokarma.pkapige";
@@ -91,6 +94,7 @@ protected String serviceName = "Pkapige";
     this.policiesFolder=this.sourceFolder+File.separator+"policies";
     this.resourcesFolder=this.sourceFolder+File.separator+"resources";
     this.jsResourcesFolder=this.resourcesFolder+File.separator+"jsc";
+    this.javaResourcesFolder=this.resourcesFolder+File.separator+"java";
     this.targetFolder=this.sourceFolder+File.separator+"targets";
     embeddedTemplateDir = templateDir = "pkapig";
     apiPackage = "proxies";
@@ -229,6 +233,7 @@ protected String serviceName = "Pkapige";
 
   public void processOpts() {
     super.processOpts();
+    //this.swagger = opts.getSwagger();
     if (this.additionalProperties.containsKey("basePackage")) {
       this.setBasePackage((String) this.additionalProperties.get("basePackage"));
       this.setInvokerPackage(this.getBasePackage());
@@ -285,6 +290,9 @@ protected String serviceName = "Pkapige";
     }
     if (this.additionalProperties.containsKey(TARGET_URI)) {
         this.setTargetURI((String) this.additionalProperties.get(TARGET_URI));
+      }
+    if (this.additionalProperties.containsKey(DATA_MODEL)) {
+        this.setTargetURI((String) this.additionalProperties.get(DATA_MODEL));
       }
     this.additionalProperties.put(CodegenConstants.SERIALIZABLE_MODEL, serializableModel);
     if (this.additionalProperties.containsKey(FULL_JAVA_UTIL)) {
@@ -354,14 +362,23 @@ protected String serviceName = "Pkapige";
     // used later in recursive import in postProcessingModels
     this.importMapping.put("com.fasterxml.jackson.annotation.JsonProperty",
         "com.fasterxml.jackson.annotation.JsonCreator");
+   /* final Map<String, Model> definitions = swagger.getDefinitions();
+    System.out.println("*********definitions******"+definitions);
     
+    //JSONPObject modeObj= new JSONPObject(definitions);
+    for (String key : definitions.keySet()) {
+    	 System.out.println("*********key******"+key);
+        System.out.println("*********key Object******"+definitions.get(key));
+      }*/
    /* this.apiTemplateFiles.put("api.mustache", ".java");
     this.apiTemplateFiles.put("apiController.mustache", "Controller.java");*/
 
     this.apiTemplateFiles.put("proxyxml.mustache", ".xml");
     this.apiTemplateFiles.put("pomxml.mustache", ".xml");
     this.apiTemplateFiles.put("targetxml.mustache", ".xml");
-    this.apiTemplateFiles.put("policies"+File.separator+"tp_AssignMessage.InitializeConfigurations.mustache", ".xml"); 
+    //this.apiTemplateFiles.put("resources"+File.separator+"dataModel.mustache", ".js");
+    this.apiTemplateFiles.put("policies"+File.separator+"tp_AssignMessage.InitializeConfigurations.mustache", ".xml");
+    this.apiTemplateFiles.put("policies"+File.separator+"tp_SetJsonSchemaRef.mustache", ".xml"); 
     
     //taregt.xml
     this.supportingFiles.add(new SupportingFile("targetxml.mustache",this.targetFolder,
@@ -451,6 +468,19 @@ protected String serviceName = "Pkapige";
            this.supportingFiles.add(new SupportingFile("policies"+File.separator+"ScopeVerification.mustache",this.policiesFolder,
                    "ScopeVerification" + ".xml"
            ));
+           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"dataModel.mustache",this.policiesFolder,
+                   "dataModel" + ".xml"
+           ));
+           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"schemaValidationJavaCallout.mustache",this.policiesFolder,
+                   "SchemaValidationJavaCallout" + ".xml"
+           ));
+           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_SetJsonSchemaRef.mustache",this.policiesFolder,
+                   "tp_SetJsonSchemaRef" + ".xml"
+           ));
+           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_SetCopyPathSuffixFalse.mustache",this.policiesFolder,
+                   "tp_SetCopyPathSuffixFalse" + ".xml"
+           ));
+           
         //resources
        this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_getFlowName.mustache",this.jsResourcesFolder,
                "tp_getFlowName" + ".js"
@@ -485,8 +515,27 @@ protected String serviceName = "Pkapige";
        this.supportingFiles.add(new SupportingFile("resources"+File.separator+"ValidateScope.mustache",this.jsResourcesFolder,
                "ValidateScope" + ".js"
            ));
+       this.supportingFiles.add(new SupportingFile("resources"+File.separator+"dataModel.mustache",this.jsResourcesFolder,
+               "dataModel" + ".js"
+           ));
+       this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_setCopyPathSuffixFalse.mustache",this.jsResourcesFolder,
+               "tp_setCopyPathSuffixFalse" + ".js"
+           ));
        this.supportingFiles.add(new SupportingFile("api.mustache",this.sourceFolder,
                "api" + ".xml"
+           ));
+       //Java jar file
+       this.supportingFiles.add(new SupportingFile("java"+File.separator+"pkmst-apigee-0.0.1-SNAPSHOT.jar",this.javaResourcesFolder,
+               "pkmst-apigee-0.0.1-SNAPSHOT" + ".jar"
+           ));
+       this.supportingFiles.add(new SupportingFile("java"+File.separator+"jackson-coreutils-1.8.jar",this.javaResourcesFolder,
+               "jackson-coreutils-1.8" + ".jar"
+           ));
+       this.supportingFiles.add(new SupportingFile("java"+File.separator+"json-schema-core-1.2.5.jar",this.javaResourcesFolder,
+               "json-schema-core-1.2.5" + ".jar"
+           ));
+       this.supportingFiles.add(new SupportingFile("java"+File.separator+"json-schema-validator-2.2.6.jar",this.javaResourcesFolder,
+               "json-schema-validator-2.2.6" + ".jar"
            ));
   }
 
@@ -729,6 +778,12 @@ protected String serviceName = "Pkapige";
 
   @Override
   public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
+	  System.out.println("**********in side allDefinitions"+allDefinitions);
+	  Gson gson = new Gson();
+	  String json = gson.toJson(allDefinitions);
+	  additionalProperties.put(TARGET_URI,targetURI);
+	  additionalProperties.put(DATA_MODEL,json);
+	  System.out.println("**********json"+json);
     CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
     if (codegenModel.description != null) {
       codegenModel.imports.add("ApiModel");
@@ -738,6 +793,7 @@ protected String serviceName = "Pkapige";
       codegenModel.imports.add("JsonTypeInfo");
     }
     if (allDefinitions != null && codegenModel.parentSchema != null && codegenModel.hasEnums) {
+    	
       final Model parentModel = allDefinitions.get(codegenModel.parentSchema);
       final CodegenModel parentCodegenModel = super.fromModel(codegenModel.parent, parentModel);
       codegenModel = PkApigServerCodegen.reconcileInlineEnums(codegenModel, parentCodegenModel);
@@ -1236,6 +1292,7 @@ protected String serviceName = "Pkapige";
   @Override
   public CodegenOperation fromOperation(String path, String httpMethod, Operation operation,
       Map<String, Model> definitions, Swagger swagger) {
+
     CodegenOperation op = super.fromOperation(path, httpMethod, operation, definitions, swagger);
     op.path = sanitizePath(op.path);
     return op;
@@ -1351,7 +1408,16 @@ protected String serviceName = "Pkapige";
 	public void setJsResourcesFolder(String jsResourcesFolder) {
 		this.jsResourcesFolder = jsResourcesFolder;
 	}
-  public String getTargetURI() {
+	
+  public String getJavaResourcesFolder() {
+		return javaResourcesFolder;
+	}
+
+	public void setJavaResourcesFolder(String javaResourcesFolder) {
+		this.javaResourcesFolder = javaResourcesFolder;
+	}
+
+public String getTargetURI() {
 		return targetURI;
 	}
 
