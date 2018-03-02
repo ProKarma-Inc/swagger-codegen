@@ -492,6 +492,9 @@ protected String serviceName = "Pkapige";
            this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_JS_OperationFlowCheck.mustache",this.policiesFolder,
                    "tp_JS_OperationFlowCheck" + ".xml"
            ));
+           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_SpikeArrestConfigKVM.mustache",this.policiesFolder,
+                   "tp_SpikeArrestConfigKVM" + ".xml"
+           ));
         //resources
        this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_getFlowName.mustache",this.jsResourcesFolder,
                "tp_getFlowName" + ".js"

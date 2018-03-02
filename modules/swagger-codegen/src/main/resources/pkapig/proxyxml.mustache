@@ -19,6 +19,10 @@
           </Step>
           <Step>
                <FaultRules />
+               <Name>tp_SpikeArrestConfigKVM</Name>
+           </Step>
+          <Step>
+               <FaultRules />
                <Name>tp_SpikeArrest.TrafficSpikeProtection</Name>
            </Step>
   <!-- Validate Mandatory Header Elements : Begin (Common To All Flows) -->
@@ -157,7 +161,7 @@
 </Flows>
   <HTTPProxyConnection>
     <!-- Define a URI to create the path to this proxy. -->	
-    <BasePath>{{{baseName}}}/v1</BasePath>  
+    <BasePath>/{{{baseName}}}/v1</BasePath>  
     <!-- Listen on HTTP URL defined in the VirtualHost named 'default'. -->	
     <VirtualHost>default</VirtualHost>
   </HTTPProxyConnection>
