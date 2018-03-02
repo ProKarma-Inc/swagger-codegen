@@ -4,10 +4,10 @@ var rateLimitQuotaCount = "";
 var rateLimitQuotaUnit = "";
 
 
-rateLimitTransactionCount = context.getVariable(context.getVariable("rateLimitTransactionCountID"));
-rateLimitTransactionUnit = context.getVariable(context.getVariable("rateLimitTransactionUnitID"));
-rateLimitQuotaCount = context.getVariable(context.getVariable("rateLimitQuotaCountID"));
-rateLimitQuotaUnit = context.getVariable(context.getVariable("rateLimitQuotaUnitID"));
+rateLimitTransactionCount = context.getVariable("apiproduct.developer.quota.limit");
+rateLimitTransactionUnit = context.getVariable("apiproduct.developer.quota.timeunit");
+rateLimitQuotaCount = context.getVariable("apiproduct.developer.transaction.limit");
+rateLimitQuotaUnit = context.getVariable("apiproduct.developer.transaction.timeunit");
 //ALLOWING 120% OF THE RATE LIMITING VALUES
 rateLimitTransactionCount = rateLimitTransactionCount * 1.2;
 rateLimitQuotaCount = rateLimitQuotaCount * 1.2;

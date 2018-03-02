@@ -18,5 +18,13 @@
     <HTTPTargetConnection>
         <Properties/>
         <URL>{{targetUri}}</URL>
+        {{#isSSLEnabled}}
+        <SSLInfo>
+	         <Enabled>{{isSSLEnabled}}</Enabled>
+	         <ClientAuthEnabled>{{isClientAuthEnabled}}</ClientAuthEnabled>
+	         <KeyStore>{{keyStore}}</KeyStore>
+	         <KeyAlias>{{KeyAlias}}</KeyAlias>
+	    </SSLInfo>
+	    {{/isSSLEnabled}}
     </HTTPTargetConnection>
 </TargetEndpoint>

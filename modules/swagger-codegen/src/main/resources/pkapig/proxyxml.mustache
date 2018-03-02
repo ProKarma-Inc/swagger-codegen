@@ -123,22 +123,24 @@
   <Flows>
   {{#operations}}
   {{#operation}}
-  <Flow name="{{{operationId}}}">
-  <Description>{{{summary}}}</Description>
+  <Flow name="{{{operationId}}}{{#allParams}}{{>bodyParam}}{{/allParams}}">
     <Request>
         <Step>
               <Name>tp_JS.GetFlowName</Name>
         </Step>
         <Step>
-              <Condition>(request.header.Content-Length > 0)</Condition>
-              <Name>tp_SetJsonSchemaRef</Name>
+               <Name>tp_JS_OperationFlowCheck</Name>
         </Step>
         <Step>
-              <Condition>(request.header.Content-Length > 0)</Condition>
+               <Condition>(raiseFaultType != null)</Condition>
+                <Name>tp_RaiseFault</Name>
+         </Step>
+        <Step>
+              <Condition>(request.header.Content-Length > 0 and objectName != null)</Condition>
 			  <Name>dataModel</Name>
 		</Step>
         <Step>
-              <Condition>(request.header.Content-Length > 0)</Condition>
+              <Condition>(request.header.Content-Length > 0 and objectName != null)</Condition>
               <Name>SchemaValidationJavaCallout</Name>
         </Step>
         <Step>
@@ -155,7 +157,7 @@
 </Flows>
   <HTTPProxyConnection>
     <!-- Define a URI to create the path to this proxy. -->	
-    <BasePath>{{{basePath}}}</BasePath>  
+    <BasePath>{{{baseName}}}/v1</BasePath>  
     <!-- Listen on HTTP URL defined in the VirtualHost named 'default'. -->	
     <VirtualHost>default</VirtualHost>
   </HTTPProxyConnection>

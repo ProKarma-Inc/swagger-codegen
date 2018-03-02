@@ -1,12 +1,13 @@
 var modelObj="{{dataModel}}";
-var res1 = modelObj.replace(/&quot;/g,'"');
-var res = res1.replace(/_/g,'');
+var res = modelObj.replace(/&quot;/g,'"').replace(/_/g,'');
 var reqPayload = context.getVariable("request.content");
 var keyToExtract=context.getVariable("objectName");
 var json = JSON.parse(res);
 var reqArray =[];
 var finalObje={};
+var refObj={};
 var orderObj=json[keyToExtract].properties;
+//var objelenght=Object.keys(orderObj).length;
 for(var key in orderObj) {
    if(orderObj[key].required){
     delete orderObj[key].required;
@@ -14,11 +15,43 @@ for(var key in orderObj) {
   }else if(!orderObj[key].required){
   delete orderObj[key].required;
   }
-}
+  if(orderObj[key].type=="ref"){
+  var objeName=orderObj[key].genericRef.simpleRef;
+   delete orderObj[key];
+   var obje =json[objeName];
+   for(var reqKey in obje.properties){
+   if(!obje.properties[reqKey].required ||obje.properties[reqKey].required ){
+   delete obje.properties[reqKey].required;
+   }
+   }
+   orderObj[key]=obje;
+   orderObj[key].type="object";
+  }
+  if(orderObj[key].type=="array" && orderObj[key].items.type =="ref" ){
+      var objeName=orderObj[key].items.genericRef.simpleRef;
+	  delete orderObj[key].items;
+	  var obje =json[objeName];
+	for(var reqKey in obje.properties){
+   if(!obje.properties[reqKey].required ||obje.properties[reqKey].required ){
+   delete obje.properties[reqKey].required;
+   }
+	  orderObj[key].items=obje;
+	  orderObj[key].items.type="object";
+  }
+  }else if(orderObj[key].type=="array"){
+   if(!orderObj[key].items.required ||orderObj[key].items.required ){
+     delete orderObj[key].items.required;
+   }
+  }
+  }
+  
+  
+finalObje.$schema="http://json-schema.org/draft-04/schema#";
 finalObje.properties=orderObj;
-if(reqArray.length > 0){
+if(reqArray.length >0){
 finalObje.required=reqArray;
 }
-var strJson = JSON.stringify(finalObje, undefined, 2);				
+finalObje.additionalProperties=false;
+var strJson = JSON.stringify(finalObje, undefined, 2);			
 context.setVariable("jsonSchema",strJson);
 context.setVariable("requestPayload",reqPayload);

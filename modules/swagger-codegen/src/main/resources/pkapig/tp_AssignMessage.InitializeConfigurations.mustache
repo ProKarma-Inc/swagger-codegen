@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage name="tp_AssignMessage.InitializeConfigurations">
+<!-- Scope validation - begin -->
+	<AssignVariable>
+		<Name>insufficientScopeErrorText</Name>
+		<Value>Insufficient Scope:  Access Token missing required scope.</Value>
+	</AssignVariable>
+	<AssignVariable>
+		<Name>insufficientScopeProfileComination</Name>
+		<Value>Insufficient Scope for Profile: Access Token missing required scope.</Value>
+	</AssignVariable>
+	<AssignVariable>
+		<Name>apiScopes</Name>
+	<Value>{{#hasAuthMethods}}{{#authMethods}}{{#isOAuth}}{{#scopes}}{{scope}}{{#hasMore}},{{/hasMore}}{{/scopes}}{{/isOAuth}}{{#hasMore}}{{/hasMore}}{{/authMethods}}{{/hasAuthMethods}}</Value>
+    </AssignVariable>
+    <AssignVariable>
+		<Name>spikeArrest.rate</Name>
+		<Value>10ps</Value>
+	</AssignVariable>
+	<AssignVariable>
+		<Name>headerElementsToValidate</Name>
+		<Value>request.header.Authorization</Value>
+	</AssignVariable>
+</AssignMessage>

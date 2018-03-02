@@ -1,0 +1,38 @@
+var validFlowScopes=context.getVariable("apiproduct."+context.getVariable("apiproxy.name")+"FlowScopes");
+var currentFlowName=context.getVariable("operationName")
+var acTokenScope = context.getVariable('scope');
+var validFlowScopesArray=validFlowScopes.split(' ');
+for (j=0; j<validFlowScopesArray.length; j++){
+var validFLowNamesArray=validFlowScopesArray[j].split(":");
+var validScope=validFLowNamesArray[0];
+var flowArray=validFLowNamesArray[1].split(",");
+var flowNameisValid = false;
+var atScopeArray=acTokenScope.split(' ');
+context.setVariable("atScopeArraylength",atScopeArray.length);
+for (k=0; k<atScopeArray.length; k++){
+    context.setVariable("validScope",validScope);
+    if(atScopeArray[k]== validScope){
+ for(i=0; i<flowArray.length; i++){
+	 var currentValidFlow=flowArray[i];
+	 if(currentValidFlow ==currentFlowName){
+		 flowNameisValid = true;
+		 break;
+	 } 
+ }
+    }
+}
+if(flowNameisValid){
+  break;  
+}
+}
+
+ if (!flowNameisValid)
+ {
+ 	context.setVariable("raiseFaultType", "generic");
+ 	context.setVariable("tp.fault.statusCode","403");
+	context.setVariable("tp.fault.reasonPhrase","Forbidden");
+	context.setVariable("tp.fault.exceptionType","policyException");
+	context.setVariable("tp.fault.messageId","POL0001");
+	context.setVariable("tp.fault.messageText", "insufficient scope for this operation");
+	context.setVariable("tp.fault.messageVariables","[ scope ]");
+ } 

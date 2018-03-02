@@ -32,6 +32,7 @@ import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import io.swagger.models.Tag;
+import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.FormParameter;
 import io.swagger.models.parameters.Parameter;
 import io.swagger.models.properties.ArrayProperty;
@@ -57,11 +58,20 @@ public class PkApigServerCodegen extends DefaultCodegen implements CodegenConfig
   public static final String WITH_XML = "withXml";
   public static final String TARGET_URI = "targetUri";
   public static final String DATA_MODEL = "dataModel";
+  public static final String OPERATION_NAME = "operationName";
   protected String groupId = "com.prokarma";
   protected String artifactId = "pkmst-apigee";
   protected String artifactVersion = "1.0.0";
   protected String projectFolder;
- 
+  protected String operationName;
+  public String getOperationName() {
+	return operationName;
+}
+
+public void setOperationName(String operationName) {
+	this.operationName = operationName;
+}
+
   protected String projectTestFolder;
   protected String sourceFolder;
   protected String policiesFolder;
@@ -233,7 +243,7 @@ protected String serviceName = "Pkapige";
 
   public void processOpts() {
     super.processOpts();
-    //this.swagger = opts.getSwagger();
+      //this.swagger = opts.getSwagger().;
     if (this.additionalProperties.containsKey("basePackage")) {
       this.setBasePackage((String) this.additionalProperties.get("basePackage"));
       this.setInvokerPackage(this.getBasePackage());
@@ -291,8 +301,8 @@ protected String serviceName = "Pkapige";
     if (this.additionalProperties.containsKey(TARGET_URI)) {
         this.setTargetURI((String) this.additionalProperties.get(TARGET_URI));
       }
-    if (this.additionalProperties.containsKey(DATA_MODEL)) {
-        this.setTargetURI((String) this.additionalProperties.get(DATA_MODEL));
+    if (this.additionalProperties.containsKey(OPERATION_NAME)) {
+        this.setOperationName((String) this.additionalProperties.get(OPERATION_NAME));
       }
     this.additionalProperties.put(CodegenConstants.SERIALIZABLE_MODEL, serializableModel);
     if (this.additionalProperties.containsKey(FULL_JAVA_UTIL)) {
@@ -372,13 +382,12 @@ protected String serviceName = "Pkapige";
       }*/
    /* this.apiTemplateFiles.put("api.mustache", ".java");
     this.apiTemplateFiles.put("apiController.mustache", "Controller.java");*/
-
     this.apiTemplateFiles.put("proxyxml.mustache", ".xml");
     this.apiTemplateFiles.put("pomxml.mustache", ".xml");
     this.apiTemplateFiles.put("targetxml.mustache", ".xml");
     //this.apiTemplateFiles.put("resources"+File.separator+"dataModel.mustache", ".js");
-    this.apiTemplateFiles.put("policies"+File.separator+"tp_AssignMessage.InitializeConfigurations.mustache", ".xml");
-    this.apiTemplateFiles.put("policies"+File.separator+"tp_SetJsonSchemaRef.mustache", ".xml"); 
+    this.apiTemplateFiles.put("tp_AssignMessage.InitializeConfigurations.mustache", ".xml");
+    //this.apiTemplateFiles.put("tp_SetJsonSchemaRef.mustache", ".xml"); 
     
     //taregt.xml
     this.supportingFiles.add(new SupportingFile("targetxml.mustache",this.targetFolder,
@@ -396,7 +405,7 @@ protected String serviceName = "Pkapige";
        this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_JS.GetFlowName.mustache",this.policiesFolder,
                "tp_JS.GetFlowName" + ".xml"
            ));
-       this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_AssignMessage.InitializeConfigurations.mustache",this.policiesFolder,
+       this.supportingFiles.add(new SupportingFile("tp_AssignMessage.InitializeConfigurations.mustache",this.policiesFolder,
                "tp_AssignMessage.InitializeConfigurations" + ".xml"
            ));
        this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_JS.JavaScriptInjectionEvaluation.mustache",this.policiesFolder,
@@ -474,13 +483,15 @@ protected String serviceName = "Pkapige";
            this.supportingFiles.add(new SupportingFile("policies"+File.separator+"schemaValidationJavaCallout.mustache",this.policiesFolder,
                    "SchemaValidationJavaCallout" + ".xml"
            ));
-           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_SetJsonSchemaRef.mustache",this.policiesFolder,
+          /* this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_SetJsonSchemaRef.mustache",this.policiesFolder,
                    "tp_SetJsonSchemaRef" + ".xml"
-           ));
+           ));*/
            this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_SetCopyPathSuffixFalse.mustache",this.policiesFolder,
                    "tp_SetCopyPathSuffixFalse" + ".xml"
            ));
-           
+           this.supportingFiles.add(new SupportingFile("policies"+File.separator+"tp_JS_OperationFlowCheck.mustache",this.policiesFolder,
+                   "tp_JS_OperationFlowCheck" + ".xml"
+           ));
         //resources
        this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_getFlowName.mustache",this.jsResourcesFolder,
                "tp_getFlowName" + ".js"
@@ -521,6 +532,9 @@ protected String serviceName = "Pkapige";
        this.supportingFiles.add(new SupportingFile("resources"+File.separator+"tp_setCopyPathSuffixFalse.mustache",this.jsResourcesFolder,
                "tp_setCopyPathSuffixFalse" + ".js"
            ));
+       this.supportingFiles.add(new SupportingFile("resources"+File.separator+"operationFlowCheck.mustache",this.jsResourcesFolder,
+               "operationFlowCheck" + ".js"
+           ));
        this.supportingFiles.add(new SupportingFile("api.mustache",this.sourceFolder,
                "api" + ".xml"
            ));
@@ -542,6 +556,7 @@ protected String serviceName = "Pkapige";
   @Override
   public Map<String, Object> postProcessOperations(Map<String, Object> objs) {
     Map<String, Object> operations = (Map<String, Object>) objs.get("operations");
+    String modelName="";
     if (operations != null) {
       List<CodegenOperation> ops = (List<CodegenOperation>) operations.get("operation");
       for (final CodegenOperation operation : ops) {
@@ -778,12 +793,10 @@ protected String serviceName = "Pkapige";
 
   @Override
   public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
-	  System.out.println("**********in side allDefinitions"+allDefinitions);
+	 
 	  Gson gson = new Gson();
 	  String json = gson.toJson(allDefinitions);
-	  additionalProperties.put(TARGET_URI,targetURI);
 	  additionalProperties.put(DATA_MODEL,json);
-	  System.out.println("**********json"+json);
     CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
     if (codegenModel.description != null) {
       codegenModel.imports.add("ApiModel");
@@ -832,6 +845,8 @@ protected String serviceName = "Pkapige";
   @Override
   public void preprocessSwagger(Swagger swagger) {
 	  super.preprocessSwagger(swagger);
+	  
+	  String modelName;
     if (swagger == null || swagger.getPaths() == null) {
       return;
     }
@@ -846,7 +861,6 @@ protected String serviceName = "Pkapige";
     this.additionalProperties.put("resourcePaths", resourcePaths);
     }
     //get vendor extensions
-    
     Map<String,Object> vendorExt = swagger.getInfo().getVendorExtensions();
     if(vendorExt !=null && !vendorExt.toString().equals("")){
     	if(vendorExt.containsKey("x-codegen")){
@@ -854,8 +868,27 @@ protected String serviceName = "Pkapige";
     		Map<String,String> uris = (Map<String, String>) vendorExt.get("x-codegen");
     		if(uris.containsKey("sburl")){
     			String targetURI = uris.get("sburl");
-    			System.out.println("*************SB-URL"+targetURI);
     			additionalProperties.put(TARGET_URI,targetURI);
+    		}
+    		if(uris.containsKey("isSSLEnabled")){
+    			String sslEnabled = uris.get("isSSLEnabled");
+    			System.out.println("*********"+sslEnabled);
+    			if(sslEnabled.equalsIgnoreCase("true"))
+    			additionalProperties.put("isSSLEnabled",true);
+    			else {
+    				additionalProperties.put("isSSLEnabled",false);
+    			}
+    		}
+    		if(uris.containsKey("isClientAuthEnabled")){
+    			String clientAuth = uris.get("isClientAuthEnabled");
+    			additionalProperties.put("isClientAuthEnabled",clientAuth);
+    		}
+    		if(uris.containsKey("keyStore")){
+    			String keyStore = uris.get("keyStore");
+    			additionalProperties.put("keyStore",keyStore);
+    		}if(uris.containsKey("KeyAlias")){
+    			String keyStore = uris.get("KeyAlias");
+    			additionalProperties.put("KeyAlias",keyStore);
     		}
     		/*if(uris.containsKey("zipkinUri")){
     			String zipkinUri = uris.get("zipkinUri");
@@ -897,6 +930,7 @@ protected String serviceName = "Pkapige";
         String accepts = getAccept(operation);
         operation.setVendorExtension("x-accepts", accepts);
       }
+      
     }
 
     if ("/".equals(swagger.getBasePath())) {
@@ -1004,7 +1038,6 @@ protected String serviceName = "Pkapige";
 
     if ("File".equals(type)) {
       String example;
-
       if (p.defaultValue == null) {
         example = p.example;
       } else {

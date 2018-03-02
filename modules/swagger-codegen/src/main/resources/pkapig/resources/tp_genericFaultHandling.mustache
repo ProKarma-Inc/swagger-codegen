@@ -24,7 +24,14 @@ else if(faultName == "SpikeArrestViolation"){
 				exceptionType = "Service Unavailable";
 				messageId = "SVC00000"
 			}
-			
+			else if(faultName == "QuotaViolation"){
+				statusCode = 429;
+				reasonPhrase = "Too Many Requests";
+				messageText = "A policy error occurred. Error code is %1";
+				messageVariables = "Too many requests per minute or exceeding quota level per day";
+				exceptionType = "policyException";
+				messageId = "POL0001"
+			}
 			
     context.setVariable("tp.fault.statusCode", statusCode);
 	context.setVariable("tp.fault.reasonPhrase", reasonPhrase);

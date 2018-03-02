@@ -1,1 +1,8 @@
-context.setVariable("operationName",context.getVariable("current.flow.name"));
+var flowName=context.getVariable("current.flow.name");
+var operationNameArray=flowName.split("_");
+var modelObje;
+if(operationNameArray.length>0){
+	modelObje=operationNameArray[1];
+}
+context.setVariable("operationName",operationNameArray[0]);
+context.setVariable("objectName",modelObje);
